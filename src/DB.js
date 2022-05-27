@@ -1,15 +1,14 @@
 const mysql = require('mysql')
 
 var con = mysql.createPool({
-    host: "localhost",
+    host: "127.0.0.1",
     user: "root",
     password: null,
-    database: "onlineBanking",
-    dateStrings: true
+    database: "onlineBanking"
 })
 
 con.getConnection((err) => {
-    if (err) throw err
+    if(err) throw err
     console.log('DBconnected')
 })
 
