@@ -10,6 +10,7 @@ function adminUserProfileModal(username,hanhdong){
   modalBg.style.display = 'block'
   modalBox.style.display = 'block'
 
+  document.getElementById('modal-confirm').style.display = 'inline-block'
   if(hanhdong == 'xacminh') modalText.innerText = 'Bạn có muốn xác minh tài khoản này'
   if(hanhdong == 'huy') modalText.innerText = 'Bạn có muốn khóa tài khoản này'
   if(hanhdong == 'bosung') modalText.innerText = 'Yêu cầu tài khoản bổ sung thông tin'
@@ -57,6 +58,10 @@ function loadTransaction(username){
           if(x.TrangThai == 3) trangthai = 'Đang chờ'
           let tr = document.createElement('tr')
 
+          tr.addEventListener('click', (e) => {
+            userTransactionInfo(x.IDChuyenTien,username,x.SDTNguoiNhan,x.SoTien,x.BenChiuPhi)
+          })
+
           tr.innerHTML = `
           <td>${x.IDChuyenTien}</td>
           <td>${x.SDTNguoiNhan}</td>
@@ -83,6 +88,8 @@ function transactionInfo(IDChuyenTien,username,SDTNguoiNhan,SoTien,BenChiuPhi){
   modalBg.style.display = 'block'
   modalBox.style.display = 'block'
 
+  document.getElementById('modal-refuse').style.display = 'inline-block'
+  document.getElementById('modal-confirm').style.display = 'inline-block'
   fetch('/admin/user', {
     method: 'POST',
     body: new URLSearchParams({
@@ -145,7 +152,7 @@ function transactionInfo(IDChuyenTien,username,SDTNguoiNhan,SoTien,BenChiuPhi){
 
         document.getElementById('modal-confirm').addEventListener('click', (e)=>{
           modalText.innerText = 'Bạn có muốn duyệt giao dịch này'
-
+          document.getElementById('modal-refuse').style.display = 'none'
           document.getElementById('modal-confirm').addEventListener('click', (e)=>{
             
             fetch('/admin/transaction', {
@@ -160,8 +167,21 @@ function transactionInfo(IDChuyenTien,username,SDTNguoiNhan,SoTien,BenChiuPhi){
               })
             }).then(resTransaction => resTransaction.json())
             .then(result => {
-              if(result == 200){
-                window.location.replace('/admin/transaction')
+              console.log(result)
+              if(result.code == 200){
+                modalText.innerText = 'Giao dịch thành công'
+                document.getElementById('modal-confirm').style.display = 'none'
+                document.getElementById('modal-close').addEventListener('click',(e) => {
+                  window.location.replace('/admin/transaction/transfer')
+                })
+              }
+              else{
+                modalText.innerText = result.msg
+                document.getElementById('modal-confirm').style.display = 'none'
+                document.getElementById('modal-close').addEventListener('click',(e) => {
+                  window.location.replace('/admin/transaction/transfer')
+                })
+
               }
             })
             
@@ -169,6 +189,122 @@ function transactionInfo(IDChuyenTien,username,SDTNguoiNhan,SoTien,BenChiuPhi){
 
         })
 
+        document.getElementById('modal-refuse').addEventListener('click', (e) => {
+          modalText.innerText = 'Bạn có muốn từ chối giao dịch này'
+
+          document.getElementById('modal-refuse').style.display = 'none'
+
+          document.getElementById('modal-confirm').addEventListener('click', (e)=>{
+            
+            fetch('/admin/transaction/refuse', {
+              method: 'POST',
+              body: new URLSearchParams({
+                IDChuyenTien: IDChuyenTien
+              })
+            }).then(resTransaction => resTransaction.json())
+            .then(result => {
+              console.log(result)
+              if(result.code == 200){
+                modalText.innerText = 'Giao dịch đã bị hủy'
+                document.getElementById('modal-confirm').style.display = 'none'
+                document.getElementById('modal-close').addEventListener('click',(e) => {
+                  window.location.replace('/admin/transaction/transfer')
+                })
+              }
+              else{
+                modalText.innerText = result.msg
+                document.getElementById('modal-confirm').style.display = 'none'
+                document.getElementById('modal-close').addEventListener('click',(e) => {
+                  window.location.replace('/admin/transaction/transfer')
+                })
+              }
+            })
+          })
+        })
+
+      })
+    }
+  })
+
+  document.getElementById('modal-close').addEventListener('click', (e)=>{
+    modalBg.style.display = 'none'
+    modalBox.style.display = 'none'
+  })
+}
+
+function userTransactionInfo(IDChuyenTien,username,SDTNguoiNhan,SoTien,BenChiuPhi){
+
+  let chiuPhi = ''
+  if (BenChiuPhi == 0) chiuPhi = 'Người chuyển'
+  else chiuPhi = 'Người nhận'
+
+  let modalBg = document.getElementById('profile-modal-bg')
+  let modalBox = document.getElementById('profile-modal-box')
+  let modalText = document.getElementById('modal-text')
+
+  modalBg.style.display = 'block'
+  modalBox.style.display = 'block'
+
+  document.getElementById('modal-confirm').style.display = 'none'
+  fetch('/admin/user', {
+    method: 'POST',
+    body: new URLSearchParams({
+      username: username
+    })
+  }).then(res => res.json())
+  .then(json => {
+    if(json.code == 404) return false
+    else{
+      fetch('/admin/user', {
+        method: 'POST',
+        body: new URLSearchParams({
+          SoDienThoai: SDTNguoiNhan
+        })
+      }).then(response => response.json())
+      .then(nguoinhan => {
+        modalText.innerHTML = `
+        <div>Người gửi --</div>
+        <table>
+          <tr>
+            <td>Số tài khoản</td>
+            <td>: ${json.username}</td>
+          </tr>
+          <tr>
+            <td>Số điện thoại</td>
+            <td>: ${json.SoDienThoai}</td>
+          </tr>
+          <tr>
+            <td>Họ và tên</td>
+            <td>: ${json.HoVaTen}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>: ${json.Email}</td>
+          </tr>
+        </table>
+        <div>Người nhận --</div>
+        <table>
+          <tr>
+            <td>Số tài khoản</td>
+            <td>: ${nguoinhan.username}</td>
+          </tr>
+          <tr>
+            <td>Số điện thoại</td>
+            <td>: ${SDTNguoiNhan}</td>
+          </tr>
+          <tr>
+            <td>Họ và tên</td>
+            <td>: ${nguoinhan.HoVaTen}</td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td>: ${nguoinhan.Email}</td>
+          </tr>
+        </table>
+        <hr>
+        <div>Số tiền chuyển : ${SoTien}</div>
+        <div>Bên chịu phí: ${chiuPhi}</div>
+        `
       })
     }
   })

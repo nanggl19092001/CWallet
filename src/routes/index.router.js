@@ -5,7 +5,9 @@ const ruttienRouter = require('./main.router.js')
 function routes(app){
 
     app.use('/ruttien', ruttienRouter)
+    
     app.use('/admin', adminRouter)
+
     app.use('/', mainRouter)
 
 }

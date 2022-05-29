@@ -7,7 +7,7 @@ class admin{
             console.log(result)
             if(err){
                 console.log(err)
-                res.send(JSON.stringify({code: 404}))
+                res.send(JSON.stringify({code: 500}))
                 return false
             }
             else{
@@ -22,7 +22,7 @@ class admin{
         
         DBconnection.query(`SELECT * FROM user WHERE username = ${username}`, (err, result) => {
             if(err){
-                res.send(JSON.stringify({code: 404}))
+                res.send(JSON.stringify({code: 500}))
                 return false
             }
             else{
@@ -56,7 +56,7 @@ class admin{
         if(req.body.username){
             DBconnection.query(`SELECT * FROM user WHERE username = ${req.body.username}`, (err,result) => {
                 if(err){
-                    res.send(JSON.stringify({code: 404}))
+                    res.send(JSON.stringify({code: 500}))
                     return false
                 }
                 else{
@@ -68,7 +68,7 @@ class admin{
         else if(req.body.SoDienThoai){
             DBconnection.query(`SELECT * FROM user WHERE SoDienThoai = ${req.body.SoDienThoai}`, (err,result) => {
                 if(err){
-                    res.send(JSON.stringify({code: 404}))
+                    res.send(JSON.stringify({code: 500}))
                     return false
                 }
                 else{
@@ -84,7 +84,7 @@ class admin{
 
         DBconnection.query(`SELECT * FROM chuyentien WHERE username = ${username}`, (err, result) => {
             if(err){
-                res.send(JSON.stringify({code: 404}))
+                res.send(JSON.stringify({code: 500}))
                 return false
             }
             else{
@@ -114,7 +114,7 @@ class admin{
     activatedPage(req,res){
         DBconnection.query(`SELECT * FROM user WHERE trangthai = 1 ORDER BY NgayTao DESC`, (err,result) => {
             if(err){
-                res.send(JSON.stringify({code:404}))
+                res.send(JSON.stringify({code:500}))
                 return false
             }
             else{
@@ -132,7 +132,7 @@ class admin{
     deactivatedPage(req,res){
         DBconnection.query(`SELECT * FROM user WHERE trangthai = 2 ORDER BY NgayTao DESC`, (err,result) => {
             if(err){
-                res.send(JSON.stringify({code:404}))
+                res.send(JSON.stringify({code:500}))
                 return false
             }
             else{
@@ -148,7 +148,7 @@ class admin{
     lockedPage(req,res){
         DBconnection.query(`SELECT * FROM user WHERE trangthai = 3 ORDER BY NgayTao DESC`, (err,result) => {
             if(err){
-                res.send(JSON.stringify({code:404}))
+                res.send(JSON.stringify({code:500}))
                 return false
             }
             else{
@@ -186,18 +186,47 @@ class admin{
             tienTru = parseInt(req.body.SoTien)
         }
 
-        console.log(tienChuyen)
-        console.log(tienTru)
-        DBconnection.query(`UPDATE chuyentien SET TrangThai = ${req.body.TrangThai} WHERE IDChuyenTien = ${req.body.IDChuyenTien}`,(err,result) => {
+        // console.log(tienChuyen)
+        // console.log(tienTru)
+        DBconnection.query(`SELECT SoDu FROM taikhoan WHERE username = ${req.body.username}`, (err, result) => {
             if(err){
-                console.log(err)
-                res.send(JSON.stringify({error: 'Failed'}))
+                res.send(JSON.stringify({code: 500}))
                 return false
             }
             else{
-                DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu - ${tienTru} WHERE username = ${req.body.username}`)
+                console.log(result)
+                if(result[0].SoDu < tienTru){
+                    res.send(JSON.stringify({code: 403,msg: 'Số dư tài khoản hiện tại không đủ'}))
+                    return false
+                }
+                else{
+                    DBconnection.query(`UPDATE chuyentien SET TrangThai = ${req.body.TrangThai} WHERE IDChuyenTien = ${req.body.IDChuyenTien}`,(err,result) => {
+                        if(err){
+                            console.log(err)
+                            res.send(JSON.stringify({error: 'Failed'}))
+                            return false
+                        }
+                        else{
+                            DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu - ${tienTru} WHERE username = ${req.body.username}`)
+            
+                            DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu + ${tienChuyen} WHERE username = ${req.body.usernameNguoiNhan}`)
+                            res.send(JSON.stringify({code: 200}))
+                            return true
+                        }
+                    })
+                }
+            }
+        })
+        
+    }
 
-                DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu + ${tienChuyen} WHERE username = ${req.body.usernameNguoiNhan}`)
+    refuseTransaction(req,res){
+        DBconnection.query(`UPDATE chuyentien SET TrangThai = 0 WHERE IDChuyenTien = ${req.body.IDChuyenTien}`, (err,req) => {
+            if(err){
+                res.send(JSON.stringify({code: 500, msg: 'server error'}))
+                return false
+            }
+            else{
                 res.send(JSON.stringify({code: 200}))
                 return true
             }

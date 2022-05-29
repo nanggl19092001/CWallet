@@ -26,4 +26,5 @@ Router.get('/transaction', adminController.transactionPage)
 
 Router.post('/transaction', adminController.confirmTransaction)
 
+Router.post('/transaction/refuse', adminController.refuseTransaction)
 module.exports = Router
