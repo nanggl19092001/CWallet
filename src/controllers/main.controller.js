@@ -2,11 +2,11 @@ const DBconnection = require('../DB')
 
 class main {
 
-    addGet(req, res) {
+    renderRutTienForm(req, res) {
         res.render('ruttien')
     }
 
-    addPost(req, res, next) {
+    firstValidateRutTienForm(req, res, next) {
         const {
             GhiChu,
             SoThe,
@@ -25,6 +25,8 @@ class main {
             if (err) throw err;
 
             thongTinThe = JSON.parse(JSON.stringify(result));
+
+            console.log(thongTinThe[0].NgayHetHan);
 
             if (thongTinThe.length == 0) {
                 errors.SoTheMessage = 'Vui lòng nhập lại số thẻ.';
@@ -51,7 +53,7 @@ class main {
         });
     }
 
-    errorPost(req, res, next) {
+    secondValidateRutTienForm(req, res, next) {
         const {
             GhiChu,
             SoThe,
@@ -100,7 +102,7 @@ class main {
         })
     }
 
-    process(req, res) {
+    processRutTienRequest(req, res) {
         const SoTien = req.cookies.userInput.data.SoTien;
 
         if (SoTien <= 5000000) {

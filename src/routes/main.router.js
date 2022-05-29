@@ -4,8 +4,8 @@ const Router = express.Router()
 
 const mainController = require('../controllers/main.controller.js')
 
-Router.get('/add', mainController.addGet)
-Router.post('/add', mainController.addPost, mainController.errorPost)
-Router.post('/process', mainController.process);
+Router.get('/add', mainController.renderRutTienForm)
+Router.post('/add', mainController.firstValidateRutTienForm, mainController.secondValidateRutTienForm)
+Router.post('/process', mainController.processRutTienRequest);
 
 module.exports = Router
