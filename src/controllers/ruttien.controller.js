@@ -26,8 +26,6 @@ class main {
 
             thongTinThe = JSON.parse(JSON.stringify(result));
 
-            console.log(thongTinThe[0].NgayHetHan);
-
             if (thongTinThe.length == 0) {
                 errors.SoTheMessage = 'Vui lòng nhập lại số thẻ.';
                 flag = false;
@@ -43,7 +41,6 @@ class main {
             }
 
             if (!flag) {
-                // console.log(errors);
                 res.render('ruttien', {
                     errors
                 });
@@ -106,13 +103,13 @@ class main {
         const SoTien = req.cookies.userInput.data.SoTien;
 
         if (SoTien <= 5000000) {
-            let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + (SoTien * 105 / 100) + "', 1, 0, 2)"
+            let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + SoTien + "', 1, 0, 2)"
             DBconnection.query(query1, function (err, result) {
                 if (err) throw err;
                 // console.log(result);
             })
         } else {
-            let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + (SoTien * 105 / 100) + "', 3, 0, 2)"
+            let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + SoTien + "', 3, 0, 2)"
             DBconnection.query(query1, function (err, result) {
                 if (err) throw err;
                 // console.log(result);
@@ -127,7 +124,7 @@ class main {
             let NgayHienTai = new Date().toISOString().slice(0, 10);
 
             if (NgayReset == NgayHienTai) {
-                let query3 = "UPDATE taikhoan SET SoDu = SoDu - " + (thongTinTaiKhoan.SoDu - (SoTien * 105 / 100)) + ", GiaoDichConLai = GiaoDichConLai - 1";
+                let query3 = "UPDATE taikhoan SET SoDu = SoDu - " + (SoTien * 105 / 100) + ", GiaoDichConLai = GiaoDichConLai - 1";
                 DBconnection.query(query3, function (err, result) {
                     if (err) throw err;
                     console.log(result);
