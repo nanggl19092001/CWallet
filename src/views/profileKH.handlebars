@@ -1,0 +1,64 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PROFILE</title>
+    <link rel="stylesheet" href="../public/css/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+  <body class="body-profile" onload="display_IMG(); uploadCMND()">
+
+    <div class="wrapper wrapper-profile">
+      <div class="left">
+        <img src="../public/img/tung.jpg" alt="user" width="100" />
+        <h4>{{user.HoVaTen}}</h4>
+      </div>
+      <div class="right">
+        <div class="info">
+          <h3>Information</h3>
+          <div class="info_data">
+            <div class="data">
+              <h4>Email</h4>
+              <p>{{user.Email}}</p>
+            </div>
+            <div class="data">
+              <h4>Phone</h4>
+              <p>{{user.SoDienThoai}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="projects">
+
+          <div class="projects_data">
+            <div class="data">
+              <h4>Birthday</h4>
+              <p>{{user.NgayThangNamSinh}}</p>
+            </div>
+            <div class="data">
+              <h4>Address</h4>
+              <p>{{user.DiaChi}}</p>
+            </div>
+          </div>
+        </div>
+        {{#if (and user.trangthai 4)}}
+          <div class="social_media">
+            <h6>Vui lòng cập nhật ảnh CMND!</h6>
+            <form>
+                <div class="form-group">
+                  <input type="file" id="image-input"  name="multiple_img" accept="image/jpeg, image/png, image/jpg" multiple/>
+                  <div id="display-image" ></div>
+                </div>
+                <button class="btn btn-primary btn_CMND"  data-id="{{user.username}}">Xác Nhận</button>
+            </form>
+          </div>
+          {{/if}}
+      </div>
+    </div>
+    <script src="../public/script/main.js"></script>
+  </body>
+</html>
