@@ -3,6 +3,8 @@ const DBconnection = require('../DB')
 class admin{
 
     homePage(req,res){
+        console.log(req.session.user)
+        console.log(req.session.role)
         DBconnection.query(`SELECT * FROM user WHERE trangthai = 0 or trangthai = 4 AND LoaiTaiKhoan = 0 ORDER BY trangthai DESC`, (err,result) => {
             // console.log(result)
             if(err){

@@ -4,7 +4,8 @@ const DBconnection = require('../DB')
 class lichsu{
 
     homePage(req,res){
-        DBconnection.query('SELECT * FROM chuyentien WHERE username = 0000000002',(err,result) =>{
+        let current_user = req.session.user
+        DBconnection.query(`SELECT * FROM chuyentien WHERE username = ${current_user}`,(err,result) =>{
             if(err){
                 res.send(JSON.stringify({code:500}))
             }
@@ -46,7 +47,8 @@ class lichsu{
     }
 
     ruttienPage(req,res){
-        DBconnection.query(`SELECT * FROM chuyentien WHERE username = 0000000002 AND LoaiGiaoDich = 2`, (err,result) => {
+        let current_user = req.session.user
+        DBconnection.query(`SELECT * FROM chuyentien WHERE username = ${current_user} AND LoaiGiaoDich = 2`, (err,result) => {
             if(err){
                 res.send(JSON.stringify({code: 500}))
                 return false

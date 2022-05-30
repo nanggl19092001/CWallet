@@ -7,6 +7,8 @@
 //7. Giao dịch một user (User)
 //8. Thông tin giao dịch rút tiền (admin)
 //9. lịch sử rút tiền (user)
+//10. onload rút tiền (user)
+//11. onload nạp tiền (user)
 
 //1. Xem profile user(admin)
 function profile(username){
@@ -602,11 +604,8 @@ function transactionWithdrawInfo(IDChuyenTien,username,SDTNguoiNhan,SoTien,BenCh
 }
 
 //9. lịch sử rút tiền (user)
-function userTransactionWithdraw(IDChuyenTien,username,TrangThai,NgayThucHien){
+function userTransactionWithdraw(IDChuyenTien,username,TrangThai,NgayThucHien, SoTien){
 
-    let chiuPhi = ''
-    if (BenChiuPhi == 0) chiuPhi = 'Người chuyển'
-    else chiuPhi = 'Người nhận'
   
     let modalBg = document.getElementById('modal-bg')
     let modalBox = document.getElementById('modal-box')
@@ -617,7 +616,6 @@ function userTransactionWithdraw(IDChuyenTien,username,TrangThai,NgayThucHien){
   
     document.getElementById('modal-confirm').style.display = 'inline-block'
   
-    document.getElementById('modal-refuse').style.display = 'inline-block'
 
           modalText.innerHTML = `
           <table>
@@ -626,8 +624,6 @@ function userTransactionWithdraw(IDChuyenTien,username,TrangThai,NgayThucHien){
               <td>: ${username}</td>
             </tr>
             <tr>
-              <td>Số điện thoại</td>
-              <td>: ${json.SoDienThoai}</td>
             </tr>
             <tr>
               <td>Trạng thái</td>
@@ -642,4 +638,65 @@ function userTransactionWithdraw(IDChuyenTien,username,TrangThai,NgayThucHien){
           <div>Số tiền : ${SoTien}</div>
           `
 
+  document.getElementById('modal-close').addEventListener('click', (e) => {
+    modalBg.style.display = 'none'
+    modalBox.style.display = 'none'
+  })
+}
+
+function isEmail(Email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(Email);
+}
+
+//10. onload đăng ký
+$(document).ready(() => {
+  $('#btn-register').click(() => {
+    var err
+    if ($('#HoVaTen').val() == "")
+      err = 'Chưa nhập họ và tên!'
+    else if ($('#Email').val() == "")
+      err = 'Chưa nhập email!'
+    else if (!isEmail($('#Email').val()))
+      err = 'Email không hợp lệ!'
+    else if ($('#SoDienThoai').val() == "")
+      err = 'Chưa nhập số điện thoại!'
+   
+    else if ($('#NgayThangNamSinh').val() == "")
+      err = 'Chưa nhập ngày tháng năm sinh!'
+
+     else if ($('#DiaChi').val() == "")
+      err = 'Chưa nhập địa chỉ!'
+    
+    if (err) {
+      $('#alter-message').html('<div class="alert alert-danger alert-dismissible fade show">' +
+        '<button id="btn-close" type="button" class="close" data-dismiss="alert">&times;</button>' +
+        err)
+    }
+    else
+      $('#form-register').submit()
+  })
+})
+
+//11. onload rút tiền
+function onloadRuttien(){
+  const btnXacNhanRutTien = document.getElementById('xac-nhan-rut-tien');
+  let successfulMsgRutTien = btnXacNhanRutTien.getAttribute("data-message");
+  
+  
+  if (successfulMsgRutTien == 'successful') {
+      btnXacNhanRutTien.click();
+  }
+  }
+
+
+//12. onload nạp tiền
+function onloadNaptien(){
+  const btnXacNhanNapTien = document.getElementById('xac-nhan-nap-tien');
+  if (btnXacNhanNapTien != null) {
+    let successfulMsgNapTien = btnXacNhanNapTien.getAttribute("data-message");
+    if (successfulMsgNapTien == 'successful') {
+        btnXacNhanNapTien.click();
+    }
+}
 }

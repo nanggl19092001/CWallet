@@ -6,9 +6,8 @@ const {check, validationResult} = require('express-validator')
 
 const loginValidator = [
         
-    check('username').exists().withMessage('Vui lòng nhập username')
-    .notEmpty().withMessage('Không được để trống username')
-    .isInt('username').withMessage('username không hợp lệ'),
+    check('email').exists().withMessage('Vui lòng nhập Email')
+    .notEmpty().withMessage('Không được để trống Email'),
     check('password').exists().withMessage('Vui lòng nhập password người dùng')
     .notEmpty().withMessage('Không được để trống password')
     .isLength({min: 6}).withMessage('Mật khẩu phải nhiều hơn 1 kí tự'),
@@ -21,8 +20,8 @@ class login{
 
         const error = req.flash('error') || ''
         const password = req.flash('password') || ''
-        const username = req.flash('username') || ''
-        res.render('login', {error: error, password: password, username: username})
+        const email = req.flash('email') || ''
+        res.render('login', {error: error, password: password, email: email})
     
         
     }
@@ -37,91 +36,98 @@ class login{
     
         if(result.errors.length === 0){
     
-            const {username, password} = req.body
+            const {email, password} = req.body
     
-            const sql = 'Select * from user where username = ?'
-            const params = [username]
-    
+            const sql = 'Select * from user where Email = ?'
+            const params = [email]
             db.query(sql, params, (err, results, fields) => {
                 
                 if(err){
                     req.flash('error', err.message)
                     req.flash('password', password)
-                    req.flash('username', username)
+                    req.flash('email', email)
                     return res.redirect('/login')
                 } else if(results.length===0){
-                    req.flash('error', 'Username không tồn tại')
+                    req.flash('error', 'Email không tồn tại')
                     req.flash('password', password)
-                    req.flash('username', username)
+                    req.flash('email', email)
     
-    
+                    return res.redirect('/login')
+                }
+                else if(results[0].trangthai == 3){
+                    req.flash('error', 'Tài khoản hiện đang bị khóa vô thời hạn vui lòng liên hệ admin')
                     return res.redirect('/login')
                 }
                 else{
                     const hashed = results[0].password
                     const match = bcrypt.compareSync(password, hashed)
-                    console.log(password)
-                    console.log(hashed)
-                    console.log(match)
-    
+
                         if(match){
+                            req.session.user = results[0].username
+                            req.session.role = results[0].LoaiTaiKhoan
                             if(results[0].DangNhapThatBai === 3){
-                                const sql1 = `Update user set DangNhapThatBai = 0 where username = ${results[0].username}`
-    
+                                const sql1 = `Update user set DangNhapThatBai = 0 where Email = '${email}'`
+                                
                                 db.query(sql1, (err, results, fields) => {
     
                                     if(err){
                                         req.flash('error', err.message)
                                         req.flash('password', password)
-                                        req.flash('username', username)
+                                        req.flash('email', email)
                                         return res.redirect('/login')
                                     }
-                                    
+                                        // console.log(results)
                                         return res.redirect('/')
                                     
                                 })
                                 
                             } else {return res.redirect('/')}
                         } else{
+
                             if(results[0].DangNhapThatBai < 3)
                             {
                             req.flash('error', 'Sai mật khẩu')
                             req.flash('password', password)
-                            req.flash('username', username)
-                            const sql2 = `Update user set DangNhapThatBai = DangNhapThatBai + 1 where username = ${results[0].username}`
-                                
+                            req.flash('email', email)
+                            const sql2 = `Update user set DangNhapThatBai = DangNhapThatBai + 1 where Email = '${email}'`
     
                                 db.query(sql2, (err, results, fields) => {
                                     if(err){
+                                        console.log(err)
                                         req.flash('error', err.message)
                                         // req.flash('password', password)
                                         // req.flash('username', username)
                                     }
                                     else{
+                                        console.log('OK')
                                         return res.redirect('/login')
                                     }
                                 })
                             }
                             
-                            else if(results[0].DangNhapThatBai == 3){
+                            else if(results[0].DangNhapThatBai === 3){
                                 if(!results[0].ThoiGianVoHieuHoa){
                                     req.flash('error', 'Tài khoản của bạn bị khóa 1 phút')
                                     req.flash('password', password)
-                                    req.flash('username', username)
-                                    const sql3 = `UPDATE user set ThoiGianVoHieuHoa = CURTIME() where username = ${results[0].username}`
+                                    req.flash('email', email)
+                                    const sql3 = `UPDATE user set ThoiGianVoHieuHoa = NOW() where Email = '${email}'`
                                     
                                     db.query(sql3, (err, results, fields) => {
     
-                                        if(err) {req.flash('error', err.message)}
+                                        if(err) {
+                                            console.log(err)
+                                            req.flash('error', err.message)
+                                        }
     
                                     })
                                 }
                                 else{
-                                const sql5 = `SELECT ThoiGianVoHieuHoa FROM user where username = ${results[0].username}`
+                                const sql5 = `SELECT ThoiGianVoHieuHoa FROM user where Email = '${email}'`
     
-                                let usernameForThis = results[0].username
+                                let emailForThis = email
                                 db.query(sql5, (err, results, fields) => {
-    
+                                    
+                                    console.log(results)
                                     
                                     if(err) {
                                         req.flash('error', err.message) 
@@ -132,12 +138,10 @@ class login{
     
                                     let date_ob = new Date();
                                     // let minutes = date_ob.getMinutes();
+                                    let deacDate = new Date(results[0].ThoiGianVoHieuHoa)
+
+                                    const a = Math.floor((date_ob - deacDate)/1000/60)
     
-                                    const a = Math.floor((date_ob - results[0].ThoiGianVoHieuHoa)/1000/60)
-    
-                                    console.log(a)
-    
-                                    console.log((date_ob - results[0].ThoiGianVoHieuHoa))
         
                                     if (a <= 1){
                                         req.flash('error', 'Vui lòng chờ sau 1 phút hãy tiến hành đăng nhập lại')
@@ -145,11 +149,12 @@ class login{
                                         // req.flash('username', username)
                                         return res.redirect('/login')
                                     } else{ 
-                                        db.query(`Update user set DangNhapThatBai = DangNhapThatBai + 1 where username = ${usernameForThis}`,(err,result) => {
+                                        db.query(`Update user set DangNhapThatBai = DangNhapThatBai + 1 where email = '${emailForThis}'`,(err,result) => {
                                             if(err){
                                                 console.log(err)
                                             }
                                             else{
+                                                req.flash('error', 'Tài khoản của bạn bị khóa vĩnh viễn. Vui lòng liên hệ admin để được hỗ trợ')
                                                 return res.redirect('/login')
                                             }
                                         })
@@ -163,7 +168,7 @@ class login{
                                 req.flash('error', 'Tài khoản của bạn bị khóa vĩnh viễn. Vui lòng liên hệ admin để được hỗ trợ')
                                 // req.flash('password', password)
                                 // req.flash('username', username)
-                                const sql4 = `UPDATE user set trangthai = 3 where username = ${results[0].username}`
+                                const sql4 = `UPDATE user set trangthai = 3, ThoiGianVoHieuHoa = NULL where Email = '${email}'`
                                 
     
                                 db.query(sql4, (err, results, fields) => {
@@ -197,16 +202,16 @@ class login{
                 break
             }
     
-            const {username, password} = req.body
+            const {email, password} = req.body
     
-            const sql = 'Select DangNhapThatBai from user where username = ?'
-            const params = [username]
+            const sql = 'Select DangNhapThatBai from user where Email = ?'
+            const params = [email]
     
             db.query(sql, params, (err, results, fields) => {
                 results[0] += 1
                 req.flash('error', message)
                 req.flash('password', password)
-                req.flash('username', username)
+                req.flash('email', email)
                 return res.redirect('/login')
             })
             

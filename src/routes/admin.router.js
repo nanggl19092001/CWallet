@@ -4,6 +4,15 @@ const Router = express.Router()
 
 const adminController = require('../controllers/admin.controller.js')
 
+Router.use((req,res,next) => {
+    if(req.session.user && req.session.role == 0){
+        return res.redirect('/')
+    }
+    else{
+        next()
+    }
+})
+
 Router.get('/', adminController.homePage)
 
 Router.get('/profile/:username', adminController.userProfilePage)

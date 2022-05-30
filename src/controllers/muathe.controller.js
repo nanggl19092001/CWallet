@@ -5,6 +5,7 @@ class muathe{
     }
 
     confirm(req,res){
+        let current_user = req.session.user
         let {menhgia10000,menhgia20000,menhgia50000,menhgia100000,nhamang} = req.body
 
         let listThe = []
@@ -32,7 +33,7 @@ class muathe{
         console.log(listThe)
         let tonggia = menhgia10000*10000 + menhgia20000 * 20000 + menhgia50000 * 50000 + menhgia100000*100000;
 
-        DBconnection.query(`SELECT SoDu FROM taikhoan WHERE username = 0000000003`, (err,result) => {
+        DBconnection.query(`SELECT SoDu FROM taikhoan WHERE username = ${current_user}`, (err,result) => {
             if(err){
                 return res.send(JSON.stringify({code: 500}))
             }
@@ -41,8 +42,8 @@ class muathe{
                     return res.send(JSON.stringify({msg: 'Số dư không đủ'}))
                 }
                 else{
-                        DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu - tonggia WHERE username = 0000000003`)
-                        DBconnection.query(`INSERT INTO muathe(username) VALUES (0000000003)`, (err, result)=> {
+                        DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu - tonggia WHERE username = ${current_user}`)
+                        DBconnection.query(`INSERT INTO muathe(username) VALUES (${current_user})`, (err, result)=> {
                             if(err) {
                                 return res.send(JSON.stringify({code: 500}))
                             }
