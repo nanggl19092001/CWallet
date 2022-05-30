@@ -51,6 +51,7 @@ class main {
     }
 
     secondValidateRutTienForm(req, res, next) {
+        let current_user = req.session.user
         const {
             GhiChu,
             SoThe,
@@ -62,7 +63,7 @@ class main {
         let errors = {};
         errors.data = req.body;
 
-        DBconnection.query(`SELECT * FROM taikhoan WHERE username = 0`, function (err, result) {
+        DBconnection.query(`SELECT * FROM taikhoan WHERE username = ${current_user}`, function (err, result) {
             let thongTinTaiKhoan = JSON.parse(JSON.stringify(result));
             let GiaoDichConLai = thongTinTaiKhoan[0].GiaoDichConLai;
             let NgayReset = thongTinTaiKhoan[0].NgayReset;
@@ -100,23 +101,24 @@ class main {
     }
 
     processRutTienRequest(req, res) {
-        const SoTien = req.cookies.userInput.data.SoTien;
-
+        const SoTien = req.cookies.userInput.data.SoTien
+        const GhiChu = req.cookies.userInput.data.GhiChu
+        let current_user = req.session.user
         if (SoTien <= 5000000) {
-            let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + SoTien + "', 1, 0, 2)"
+            let query1 = `INSERT INTO chuyentien (username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich,GhiChu) VALUES( ${current_user}, '0', ${SoTien}, 1, 0, 2, '${GhiChu}')`
             DBconnection.query(query1, function (err, result) {
                 if (err) throw err;
                 // console.log(result);
             })
         } else {
-            let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + SoTien + "', 3, 0, 2)"
+            let query1 = `INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich, GhiChu) VALUES(${current_user}, '0', ${SoTien}, 3, 0, 2,'${GhiChu}')`
             DBconnection.query(query1, function (err, result) {
                 if (err) throw err;
                 // console.log(result);
             })
         }
 
-        let query2 = "SELECT * FROM taikhoan WHERE username = 0"
+        let query2 = `SELECT * FROM taikhoan WHERE username = ${current_user}`
         DBconnection.query(query2, function (err, result) {
             if (err) throw err;
             let thongTinTaiKhoan = JSON.parse(JSON.stringify(result[0]));
@@ -124,16 +126,20 @@ class main {
             let NgayHienTai = new Date().toISOString().slice(0, 10);
 
             if (NgayReset == NgayHienTai) {
-                let query3 = "UPDATE taikhoan SET SoDu = SoDu - " + (SoTien * 105 / 100) + ", GiaoDichConLai = GiaoDichConLai - 1";
+                let query3 = "UPDATE taikhoan SET SoDu = SoDu - " + (SoTien * 105 / 100) + ", GiaoDichConLai = GiaoDichConLai - 1 WHERE username = "+current_user+"";
                 DBconnection.query(query3, function (err, result) {
                     if (err) throw err;
-                    console.log(result);
+                    else {
+                        res.redirect('/lichsu/ruttien')
+                    }
                 })
             } else {
-                let query3 = "UPDATE taikhoan SET SoDu = SoDu - " + (thongTinTaiKhoan.SoDu - (SoTien * 105 / 100)) + ", NgayReset = '" + NgayHienTai + "', GiaoDichConLai = 1";
+                let query3 = "UPDATE taikhoan SET SoDu = SoDu - " + (thongTinTaiKhoan.SoDu - (SoTien * 105 / 100)) + ", NgayReset = '" + NgayHienTai + "', GiaoDichConLai = 1 WHERE username = "+current_user+"";
                 DBconnection.query(query3, function (err, result) {
                     if (err) throw err;
-                    console.log(result);
+                    else {
+                        res.redirect('/lichsu/ruttien')
+                    }
                 })
             }
         })

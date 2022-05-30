@@ -3,8 +3,6 @@ const DBconnection = require('../DB')
 class admin{
 
     homePage(req,res){
-        console.log(req.session.user)
-        console.log(req.session.role)
         DBconnection.query(`SELECT * FROM user WHERE trangthai = 0 or trangthai = 4 AND LoaiTaiKhoan = 0 ORDER BY trangthai DESC`, (err,result) => {
             // console.log(result)
             if(err){
@@ -13,6 +11,9 @@ class admin{
                 return false
             }
             else{
+                for(let i = 0;i < result.length; i++){
+                    result[i].pathusername = parseInt(result[i].username) 
+                }
                 res.render('adminHomePage', {users:result})
                 return true
             }
@@ -46,6 +47,9 @@ class admin{
                     }
 
                 }
+                for(let i = 0;i < result.length; i++){
+                    result[i].pathusername = parseInt(result[i].username) 
+                }
                 res.render('adminUserProfile', {user:result,status:status, helpers: {
                     eq(a,b) { return a == b }
                 }})
@@ -62,6 +66,9 @@ class admin{
                     return false
                 }
                 else{
+                    for(let i = 0;i < result.length; i++){
+                        result[i].pathusername = parseInt(result[i].username) 
+                    }
                     res.send(JSON.stringify(result[0]))
                     return true
                 }
@@ -74,6 +81,7 @@ class admin{
                     return false
                 }
                 else{
+                    result[0].pathusername = parseInt(result[0].username) 
                     res.send(JSON.stringify(result[0]))
                     return true
                 }
@@ -100,7 +108,7 @@ class admin{
         let username = req.body.username
         let trangthai = req.body.trangthai
 
-        DBconnection.query(`UPDATE user SET trangthai = ${trangthai} WHERE username = ${username}`, (err,result)=> {
+        DBconnection.query(`UPDATE user SET trangthai = ${trangthai}, DangNhapThatBai = 0 WHERE username = ${username}`, (err,result)=> {
             if(err){
                 console.log(err)
                 res.send(JSON.stringify({code: 500}))
@@ -124,6 +132,9 @@ class admin{
                     for(let i=0;i<result.length;i++){
                         result[i].NgayTao = JSON.stringify(result[i].NgayTao).split('T')[0].replace('"','')
                     }
+                    for(let i = 0;i < result.length; i++){
+                        result[i].pathusername = parseInt(result[i].username) 
+                    }
                 }
                 res.render('adminActivatedUsers', {user: result})
                 return true
@@ -140,6 +151,9 @@ class admin{
             else{
                 if(result[0]){
                     result[0].NgayTao = JSON.stringify(result[0].NgayTao).split('T')[0].replace('"','')
+                    for(let i = 0;i < result.length; i++){
+                        result[i].pathusername = parseInt(result[i].username) 
+                    }
                 }
                 res.render('adminDeactivatedUsers', {user: result})
                 return true
@@ -156,7 +170,11 @@ class admin{
             else{
                 if(result[0]){
                     result[0].NgayTao = JSON.stringify(result[0].NgayTao).split('T')[0].replace('"','')
+                    for(let i = 0;i < result.length; i++){
+                        result[i].pathusername = parseInt(result[i].username) 
+                    }
                 }
+
                 res.render('adminLockedUsers', {user: result})
                 return true
             }
@@ -196,7 +214,6 @@ class admin{
                 return false
             }
             else{
-                console.log(result)
                 if(result[0].SoDu < tienTru){
                     res.send(JSON.stringify({code: 403,msg: 'Số dư tài khoản hiện tại không đủ'}))
                     return false
