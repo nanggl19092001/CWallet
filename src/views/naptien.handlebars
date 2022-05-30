@@ -26,10 +26,10 @@
         <a class="nav-link" href="/chuyentien">Chuyển tiền</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" href="/ruttien/add">Rút tiền</a>
+        <a class="nav-link" href="/ruttien/add">Rút tiền</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/naptien/add">Nạp tiền</a>
+        <a class="nav-link active" href="/naptien/add">Nạp tiền</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/lichsu">Lịch sử giao dịch</a>
@@ -41,8 +41,8 @@
 </div>
 
     <div class="container my-4">
-        <h1 class="text-center">RÚT TIỀN</h1>
-        <form action="" method="post">
+        <h1 class="text-center">NẠP TIỀN</h1>
+        <form method="post">
             <div class="form-group">
                 <label for="">Số thẻ</label>
                 {{#if errors.SoTheMessage}}
@@ -76,67 +76,46 @@
             </div>
 
             <div class="form-group">
-                <label>Số tiền rút</label>
+                <label>Số tiền nạp</label>
                 {{#if errors.SoTienMessage}}
                 <input required name="SoTien" type="number" class="form-control is-invalid"
-                    placeholder="Nhập số tiền cần rút">
+                    placeholder="Nhập số tiền cần nạp">
                 <div class=" was-validated invalid-feedback">
                     {{errors.SoTienMessage}}
                 </div>
                 {{else}}
                 <input value="{{errors.data.SoTien}}" required name="SoTien" type="number" class="form-control"
-                    placeholder="Nhập số tiền cần rút">
+                    placeholder="Nhập số tiền cần nạp">
                 {{/if}}
             </div>
 
-            <div class="form-group">
-                <label>Ghi chú</label>
-                <textarea name="GhiChu" style="resize: none;" class="form-control"
-                    rows="5">{{errors.data.GhiChu}}</textarea>
-            </div>
-
-            {{#if errors.GiaoDichToiDaMessage}}
-            <div class="alert alert-danger text-center" role="alert">
-                {{errors.GiaoDichToiDaMessage}}
-            </div>
-            {{/if}}
-
             <div class="text-center">
-                <button class="btn btn-success" type="submit">RÚT TIỀN</button>
+                <button class="btn btn-success" type="submit">NẠP TIỀN</button>
             </div>
         </form>
 
-        <button style="visibility: hidden;" data-message="{{message}}" id="xac-nhan-rut-tien"
+        <button style="visibility: hidden;" data-message="{{message}}" id="xac-nhan-nap-tien"
             style="visibility: visible;" type="button" class="btn btn-primary" data-toggle="modal"
             data-target="#exampleModal">
             Launch demo modal
         </button>
 
-        <form action="/ruttien/process" method="POST">
+        <form action="/naptien/process" method="POST">
             <!-- Modal -->
             <div class="modal show" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN RÚT TIỀN</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN NẠP TIỀN</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Số tiền rút</label>
-                                <input disabled value="{{XacNhanSoTienRut}}" type="text" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Phí rút tiền</label>
-                                <input disabled value="{{PhiRutTien}}" type="text" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label>Ghi chú</label>
-                                <textarea disabled style="resize: none;" class="form-control"
-                                    rows="5">{{errors.data.GhiChu}}</textarea>
+                                <label>Số tiền nạp</label>
+                                <input disabled value="{{XacNhanSoTienNap}}" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="modal-footer">

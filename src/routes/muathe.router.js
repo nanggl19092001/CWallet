@@ -2,7 +2,7 @@ const express = require('express')
 
 const Router = express.Router()
 
-const mainController = require('../controllers/main.controller.js')
+const muatheController = require('../controllers/muathe.controller.js')
 
 Router.use((req,res,next) => {
     if(req.session.user && req.session.role == 1){
@@ -13,6 +13,8 @@ Router.use((req,res,next) => {
     }
 })
 
-Router.get('/', mainController.homePage)
+Router.post('/confirm', muatheController.confirm)
+
+Router.get('/', muatheController.homePage)
 
 module.exports = Router
