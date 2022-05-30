@@ -4,7 +4,7 @@ class admin{
 
     homePage(req,res){
         DBconnection.query(`SELECT * FROM user WHERE trangthai = 0 or trangthai = 4 AND LoaiTaiKhoan = 0 ORDER BY trangthai DESC`, (err,result) => {
-            console.log(result)
+            // console.log(result)
             if(err){
                 console.log(err)
                 res.send(JSON.stringify({code: 500}))
@@ -218,6 +218,21 @@ class admin{
             }
         })
         
+    }
+
+    confirmWithdraw(req,res){
+        DBconnection.query(`UPDATE chuyentien SET TrangThai = ${req.body.TrangThai} WHERE IDChuyenTien = ${req.body.IDChuyenTien}`,(err,result) => {
+            if(err){
+                console.log(err)
+                res.send(JSON.stringify({error: 'Failed'}))
+                return false
+            }
+            else{
+                DBconnection.query(`UPDATE taikhoan SET SoDu = SoDu + ${req.body.SoTien} WHERE username = ${req.body.username}`)
+                res.send(JSON.stringify({code: 200}))
+                return true
+            }
+        })
     }
 
     refuseTransaction(req,res){

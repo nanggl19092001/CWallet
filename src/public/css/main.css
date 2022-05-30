@@ -1,6 +1,6 @@
 
 
-tbody tr:hover{
+#admin-body tr:hover{
     cursor: pointer;
     background-color: aliceblue;
 }
