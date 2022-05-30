@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng kí</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css    ">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    p.item {
+      padding: 16px;
+      text-align: center;
+      border-radius: 8px;
+      color: white;
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body class="bg-secondary">
+
+  <h3 class="text-center my-5 text-light">Đăng kí tài khoản</h3>
+
+  <!-- buộc toàn bộ dòng và cột phải bỏ trong class container -->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-5">
+        <div class="border p-3 rounded bg-light">
+          <form  method="post"   id="form-register">
+            <div>
+              <input type="text" class="d-none" name="_csrf" value="{{csrf}}">
+            </div>
+
+            <div class="form-group">
+              <label for="user">Họ và tên</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+                <input name="HoVaTen" id="HoVaTen" type="text" class="form-control" placeholder=" Nhập họ và tên" >
+              </div>
+
+              
+              <div class="form-group">
+                <label for="user">Số điện thoại</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="fas fa-user"></i>
+                    </span>
+                  </div>
+                  <input name="SoDienThoai" id="SoDienThoai" type="text" class="form-control" placeholder=" Nhập số điện thoại" >
+                </div>
+
+
+                <div class="form-group">
+                  <label for="user">Địa chỉ</label>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="fas fa-user"></i>
+                      </span>
+                    </div>
+                    <input name="DiaChi" id="DiaChi" type="text" class="form-control" placeholder=" Nhập địa chỉ" >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="birthday">Ngày tháng năm sinh</label>
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fas fa-user"></i>
+                        </span>
+                      </div>
+                      <input name="NgayThangNamSinh" id="NgayThangNamSinh" type="date" class="form-control" placeholder=" Nhập ngày tháng năm sinh">
+                    </div>
+
+            <div class="form-group">
+              <label for="user">Email</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                  </span>
+                </div>
+                <input name="Email" id="Email" type="text" class="form-control" placeholder="Email" >
+              </div>
+
+            <div class="form-group" id="alter-message">
+              {{#if flash}}
+                <div class="alert alert-danger alert-dismissible fade show">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  {{ flash.message}}
+                </div>
+                {{/if }}
+            </div>
+            <div class="form-group">
+              <button class="btn btn-success px-5" type="button" id="btn-register">Đăng kí</button>
+            </div>
+            <div class="form-group">
+              <p>Bạn đã có tài khoản? <a href="/login/loginpage">Đăng nhập ngay!</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    
+     function isEmail(Email) {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+      return regex.test(Email);
+    }
+ $(document).ready(() => {
+      $('#btn-register').click(() => {
+        var err
+        if ($('#HoVaTen').val() == "")
+          err = 'Chưa nhập họ và tên!'
+        else if ($('#Email').val() == "")
+          err = 'Chưa nhập email!'
+        else if (!isEmail($('#Email').val()))
+          err = 'Email không hợp lệ!'
+        else if ($('#SoDienThoai').val() == "")
+          err = 'Chưa nhập số điện thoại!'
+       
+        else if ($('#NgayThangNamSinh').val() == "")
+          err = 'Chưa nhập ngày tháng năm sinh!'
+
+         else if ($('#DiaChi').val() == "")
+          err = 'Chưa nhập địa chỉ!'
+        
+        if (err) {
+          $('#alter-message').html('<div class="alert alert-danger alert-dismissible fade show">' +
+            '<button id="btn-close" type="button" class="close" data-dismiss="alert">&times;</button>' +
+            err)
+        }
+        else
+          $('#form-register').submit()
+      })
+    })
+
+   
+  </script>
+
+
+</body>
+
+</html>
