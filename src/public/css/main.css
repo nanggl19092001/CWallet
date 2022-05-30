@@ -1,0 +1,49 @@
+
+
+#admin-body tr:hover{
+    cursor: pointer;
+    background-color: aliceblue;
+}
+
+#side-bar {
+    position: fixed;
+    height: 100%;
+}
+
+.nav a:hover {
+    background-color: aliceblue;
+}
+
+.nav a {
+    margin-top: 10px;
+}
+
+#nav-admin {
+    margin-left: -17px
+}
+
+#CMND img {
+    height: 250px;
+    width: 500px;
+}
+
+.modal-bg {
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 100%;
+    opacity: 30%;
+    background-color: black;
+    z-index: 10;
+}
+
+.modal-box {
+    position: absolute;
+    display: none;
+    padding: 25px;
+    background-color: white;
+    z-index: 11;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

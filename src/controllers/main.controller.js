@@ -1,8 +1,7 @@
 const DBconnection = require('../DB')
 
 class main{
-
-    mainPage(req,res){
+    homePage(req,res){
         res.render('index')
     }
 }
