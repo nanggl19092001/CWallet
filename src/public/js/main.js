@@ -845,12 +845,19 @@ function changePassword(){
   msg.style.display = 'none'
 
   document.querySelector('#change-pass').addEventListener('submit', (e) => {
+    let password = document.getElementById('newpassword').value
     let newpassword = document.getElementById('newpassword').value
     let rePassword = document.getElementById('rePassword').value
 
     if(newpassword != rePassword){
       msg.style.display = 'flex'
       msg.innerText = 'Mật khẩu xác nhận không trùng khớp'
+      e.preventDefault()
+      return false
+    }
+    if(password == '' || newpassword == '' || rePassword == ''){
+      msg.style.display = 'flex'
+      msg.innerText = 'Vui lòng điền đầy đủ thông tin'
       e.preventDefault()
       return false
     }

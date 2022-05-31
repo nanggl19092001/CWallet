@@ -10,7 +10,7 @@ const profileKHRouter = require('./profileKH.router.js')
 const dangnhaplandauRouter = require('./dangnhaplandau.router.js')
 const authRouter = require('./auth.router.js')
 const changepasswordRouter = require('./changepassword.router.js')
-
+const chuyentienRouter = require('./chuyentien.router.js')
 
 function routes(app) {
 
@@ -34,7 +34,7 @@ function routes(app) {
         res.redirect('/')
     })
 
- 
+    app.use('/chuyentien', chuyentienRouter)
 
     app.use('/naptien', naptienRouter)
 
