@@ -5,7 +5,7 @@ const multer = require('multer');
       callback(null, "./src/uploads/user");
     },
     filename: (req,file,callback) => {
-      callback(null, Date.now()+"-"+file.originalname);
+      callback(null, 'new.png');
     }
   })
  

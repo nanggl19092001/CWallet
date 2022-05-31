@@ -65,6 +65,7 @@ class login{
                         if(match){
                             req.session.user = results[0].username
                             req.session.role = results[0].LoaiTaiKhoan
+                            req.session.dangnhaplandau = results[0].DangNhapLanDau
                             if(results[0].DangNhapThatBai === 3){
                                 const sql1 = `Update user set DangNhapThatBai = 0 where Email = '${email}'`
                                 

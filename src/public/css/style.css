@@ -1,5 +1,70 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans&display=swap');
 
+#admin-body tr:hover{
+    cursor: pointer;
+    background-color: aliceblue;
+}
+
+#lab-body p.item {
+        padding: 16px;
+        text-align: center;
+        border-radius: 8px;
+        color: white;
+        background-color: green;
+      
+}
+
+
+#side-bar {
+    position: fixed;
+    height: 100%;
+}
+
+.nav a:hover {
+    background-color: aliceblue;
+}
+
+.nav a {
+    margin-top: 10px;
+}
+
+#nav-admin {
+    margin-left: -17px
+}
+
+#CMND img {
+    height: 250px;
+    width: 500px;
+}
+
+.modal-bg {
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 100%;
+    opacity: 30%;
+    background-color: black;
+    z-index: 10;
+}
+
+.modal-box {
+    position: absolute;
+    display: none;
+    padding: 25px;
+    background-color: white;
+    z-index: 11;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#history-body tr:hover{
+    cursor: pointer;
+    background-color: aliceblue;
+}
+
+
+
 *{
   margin: 0;
   padding: 0;
@@ -17,7 +82,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%,-40%);
   width: 450px;
   display: flex;
   box-shadow: 0 1px 20px 0 rgba(69,90,100,.08);

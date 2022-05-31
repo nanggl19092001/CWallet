@@ -24,7 +24,7 @@
 
         <div class="mt-5">
             <button id='modal-confirm' class="btn btn-success">Xác nhận</button>
-            <button id='modal-close' class="btn btn-danger">Đóng</button>
+            <button id='modal-close' class="btn btn-danger">Hủy</button>
         </div>
     </div>
 
@@ -67,27 +67,25 @@
                         <a class="nav-link" href="/lichsu">Chuyển tiền</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/lichsu/ruttien">Rút tiền</a>
+                        <a class="nav-link" href="/lichsu/ruttien">Rút tiền</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/lichsu/naptien">Nạp tiền</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/lichsu/thedienthoai">Dịch vụ</a>
+                        <a class="nav-link active" href="/lichsu/thedienthoai">Dịch vụ</a>
                     </li>
                 </ul>
                 <table class="table border">
                     <thead class="thead-dark">
                             <th>Mã giao dịch</th>
-                            <th>Số tiền</th>
-                            <th>Trạng thái</th>
+                            <th>Thời gian</th>
                     </thead>
                     <tbody>
                         {{#each giaodich}}
-                            <tr onclick="userTransactionWithdraw({{IDChuyenTien}},'{{username}}','{{change TrangThai}}','{{NgayThucHien}}',{{SoTien}})">
-                                <td>{{IDChuyenTien}}</td>
-                                <td>{{SoTien}}</td>
-                                <td>{{change TrangThai}}</td>
+                            <tr onclick="thedienthoaiInfo({{IDGiaoDich}})">
+                                <td>{{IDGiaoDich}}</td>
+                                <td>{{ThoiGian}}</td>
                             </tr>
                         {{/each}}
                     </tbody>
