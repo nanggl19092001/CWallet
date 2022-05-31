@@ -60,23 +60,33 @@ class main {
 
     processNapTienRequest(req, res) {
         const SoTien = req.cookies.userInput.data.SoTien;
-        
-        let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + SoTien + "', 1, 0, 1)"
+        const username = req.session.user;
+
+        let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, " + username + ", '0797377266', '" + SoTien + "', 1, 0, 1)"
         DBconnection.query(query1, function (err, result) {
             if (err) throw err;
             // console.log(result);
         })
 
-        let query2 = "SELECT * FROM taikhoan WHERE username = 0"
+        let query2 = "SELECT * FROM taikhoan WHERE username = " + username;
         DBconnection.query(query2, function (err, result) {
             if (err) throw err;
-            let thongTinTaiKhoan = JSON.parse(JSON.stringify(result[0]));
-            let query3 = "UPDATE taikhoan SET SoDu = SoDu + " + SoTien;
+            if (result.length == 0) {
+                let NgayHienTai = new Date().toISOString().slice(0, 10);
+                let query3 = "INSERT INTO taikhoan(username, SoDu, NgayReset, GiaoDichConLai) VALUES(" + username + ", " + SoTien + ", '" + NgayHienTai + "', 2)";
+                DBconnection.query(query3, function (err, result) {
+                    if (err) throw err;
+                    console.log(result);
+                })
+            } else {
+                let thongTinTaiKhoan = JSON.parse(JSON.stringify(result[0]));
+                let query3 = "UPDATE taikhoan SET SoDu = SoDu + " + SoTien + " WHERE username = " + username;
 
-            DBconnection.query(query3, function (err, result) {
-                if (err) throw err;
-                console.log(result);
-            })
+                DBconnection.query(query3, function (err, result) {
+                    if (err) throw err;
+                    console.log(result);
+                })
+            }
         })
     }
 }
