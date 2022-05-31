@@ -21,9 +21,17 @@ const {
 
 const routes = require('./routes/index.router.js')
 
+const methodOverride = require('method-override');
+
+app.use(methodOverride('_method'));
+
 const port = 3000 || process.env.PORT
 
-app.engine('handlebars', engine())
+app.engine('.handlebars', engine({
+  helpers: {
+    and: (a,b) => a===b,
+    not: (a,b) => a !== b
+  }}))
 
 app.set('view engine', 'handlebars')
 

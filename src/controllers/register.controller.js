@@ -77,7 +77,14 @@ class main {
 					}
 					return res.redirect('/register/registerpage')
 				} else if (result.affectedRows == 1) {
-					return res.redirect('/login')
+					DBconnection.query(`INSERT INTO taikhoan(username,SoDu) VALUES(${result.insertId},10000000)`, (err,result) => {
+						if(err){
+							res.send(JSON.stringify({code:500}))
+						}
+						else{
+							return res.redirect('/login')
+						}
+					})
 				}
 			})
 		});

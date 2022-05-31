@@ -4,8 +4,9 @@ const DBconnection = require('../DB')
 class lichsu{
 
     homePage(req,res){
+        console.log(req.session.role)
         let current_user = req.session.user
-        DBconnection.query(`SELECT * FROM chuyentien WHERE username = ${current_user}`,(err,result) =>{
+        DBconnection.query(`SELECT * FROM chuyentien WHERE username = ${current_user} AND LoaiGiaoDich = 1`,(err,result) =>{
             if(err){
                 res.send(JSON.stringify({code:500}))
             }
@@ -62,6 +63,37 @@ class lichsu{
             }
         })
     }
+
+    thedienthoaiPage(req,res){
+        let current_user = req.session.user
+        DBconnection.query(`SELECT * FROM muathe WHERE username = ${current_user}`,(err,result) => {
+            if(err){
+                console.log(err)
+                res.send(JSON.stringify({code:500}))
+            }
+            else{
+                res.render('lichsuThedienthoai', {giaodich: result})
+            }
+        })
+    }
+
+    naptienPage(req,res){
+        let current_user = req.session.user
+        DBconnection.query(`SELECT * FROM chuyentien WHERE username = ${current_user} AND LoaiGiaoDich = 3 ORDER BY NgayThucHien DESC`, (err,result) => {
+            if(err){
+                res.send(JSON.stringify({code: 500}))
+                return false
+            }
+            else{
+                res.render('lichsuNaptien', {giaodich: result, helpers: { change(trangthai){
+                    if(trangthai == 1) return 'Hoàn thành'
+                    if(trangthai == 0) return 'Thất bại'
+                    if(trangthai == 3) return 'Đang chờ'
+                }}})
+            }
+        })
+    }
+
 }
 
 module.exports = new lichsu

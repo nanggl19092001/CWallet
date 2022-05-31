@@ -13,9 +13,13 @@ Router.use((req,res,next) => {
     }
 })
 
+Router.get('/thedienthoai', lichsuController.thedienthoaiPage)
+
 Router.get('/thedienthoai/:IDGiaoDich', lichsuController.thedienthoaiInfo)
 
 Router.get('/ruttien', lichsuController.ruttienPage)
+
+Router.get('/naptien', lichsuController.naptienPage)
 
 Router.get('/', lichsuController.homePage)
 

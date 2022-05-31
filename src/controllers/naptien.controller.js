@@ -59,15 +59,16 @@ class main {
     }
 
     processNapTienRequest(req, res) {
+        const current_user = req.session.user
         const SoTien = req.cookies.userInput.data.SoTien;
-        
-        let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, 0, '0797377266', '" + SoTien + "', 1, 0, 1)"
+
+        let query1 = `INSERT INTO chuyentien (username,SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi , LoaiGiaoDich) VALUES(${current_user}, 0, ${SoTien}, 1, 0, 3)`
         DBconnection.query(query1, function (err, result) {
             if (err) throw err;
             // console.log(result);
         })
 
-        let query2 = "SELECT * FROM taikhoan WHERE username = 0"
+        let query2 = `SELECT * FROM taikhoan WHERE username = ${current_user}`
         DBconnection.query(query2, function (err, result) {
             if (err) throw err;
             let thongTinTaiKhoan = JSON.parse(JSON.stringify(result[0]));
@@ -75,7 +76,9 @@ class main {
 
             DBconnection.query(query3, function (err, result) {
                 if (err) throw err;
-                console.log(result);
+                else{
+                    return res.redirect('lichsuNaptien')
+                }
             })
         })
     }

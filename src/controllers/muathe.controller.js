@@ -6,6 +6,7 @@ class muathe{
 
     confirm(req,res){
         let current_user = req.session.user
+        console.log(current_user)
         let {menhgia10000,menhgia20000,menhgia50000,menhgia100000,nhamang} = req.body
 
         let listThe = []
