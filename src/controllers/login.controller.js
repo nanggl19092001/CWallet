@@ -60,7 +60,7 @@ class login{
                 }
                 else{
                     const hashed = results[0].password
-                    const match = bcrypt.compareSync(password, hashed)
+                    const match = bcrypt.compare(password, hashed)
 
                         if(match){
                             req.session.user = results[0].username
