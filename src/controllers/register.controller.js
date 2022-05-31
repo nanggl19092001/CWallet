@@ -17,9 +17,9 @@ var csrf = require('csrf-token')
 class main {
 
 	registerPage(req, res) {
-		bcrypt.compare('90830056', '$2b$10$TQlnQswrKFHCFpWufMk/3.4HqsnyoTaKrfAUWjTKd3t9HyvMvsG52', function (err, result) {
-			console.log(result);
-		});
+	//	bcrypt.compare('90830056', '$2b$10$TQlnQswrKFHCFpWufMk/3.4HqsnyoTaKrfAUWjTKd3t9HyvMvsG52', function (err, result) {
+		//	console.log(result);
+	//	});
 
 		res.render('register')
 	}
@@ -58,9 +58,9 @@ class main {
 
             if (queryResult1 !='') {
                 console.log('error');
-                req.session.flash = {
-                    message: 'Email đã tồn tại!'
-                }
+				req.session.flash = {
+					message: 'Email đã tồn tại!'
+				}
                 return res.redirect('/register/registerpage')
             } else{
 
@@ -77,6 +77,7 @@ class main {
 					}
 					return res.redirect('/register/registerpage')
 				} else if (result.affectedRows == 1) {
+					req.flash('error','Mật khẩu tài khoản vừa đăng kí: '+password)
 					return res.redirect('/login')
 				}
 			})
@@ -84,19 +85,7 @@ class main {
 	}
 
 	})
-		//	} 
-		//else {
-		//	validate = validate.mapped()
-		//	var message
-		//	for (i in validate) {
-		//		message = validate[i].msg
-		//		break
-		//	}
-		//	req.session.flash = {
-		//		message: message
-		//	}
-		//	res.redirect('/register')
-		//	}
+		
 	}
 }
 
