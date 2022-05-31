@@ -5,6 +5,16 @@
     background-color: aliceblue;
 }
 
+#lab-body p.item {
+        padding: 16px;
+        text-align: center;
+        border-radius: 8px;
+        color: white;
+        background-color: green;
+      
+}
+
+
 #side-bar {
     position: fixed;
     height: 100%;

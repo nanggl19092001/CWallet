@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   <body class="body-profile" onload="display_IMG(); uploadCMND()">
-
 <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-3">
         <a class="navbar-brand" href="/">Online Banking</a>
@@ -20,8 +19,8 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item ">
-        <a class="nav-link active" href="/">Trang chủ</a>
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Trang chủ</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/chuyentien">Chuyển tiền</a>
@@ -46,8 +45,9 @@
 
     <div class="wrapper wrapper-profile">
       <div class="left">
-        <img src="../public/img/tung.jpg" alt="user" width="100" />
+        <img src="../public/img/AvatarUser.jpg" alt="user" width="100" />
         <h4>{{user.HoVaTen}}</h4>
+        <div><a href="/changepassword"><button class="btn btn-primary">Đổi mật khẩu</button></a></div>
       </div>
       <div class="right">
         <div class="info">
@@ -89,7 +89,9 @@
             </form>
           </div>
           {{/if}}
+          
       </div>
+      
     </div>
     <script src="/js/main.js"></script>
   </body>

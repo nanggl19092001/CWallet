@@ -7,14 +7,18 @@ const naptienRouter = require('./naptien.router.js')
 const ruttienRouter = require('./ruttien.router.js')
 const registerRouter = require('./register.router.js')
 const profileKHRouter = require('./profileKH.router.js')
-const dangnhaplandau = require('./dangnhaplandau.router.js')
+const dangnhaplandauRouter = require('./dangnhaplandau.router.js')
 const authRouter = require('./auth.router.js')
+const changepasswordRouter = require('./changepassword.router.js')
+
 
 function routes(app) {
 
     app.use('/login', loginRouter)
 
     app.use('/register', registerRouter)
+
+    app.use('/auth',authRouter)
 
     app.use((req,res,next) => {
         if(!req.session.user){
@@ -30,7 +34,7 @@ function routes(app) {
         res.redirect('/')
     })
 
-    app.use('/auth',authRouter)
+ 
 
     app.use('/naptien', naptienRouter)
 
@@ -43,6 +47,8 @@ function routes(app) {
     app.use('/lichsu', lichsuRouter)
 
     app.use('/dangnhaplandau', dangnhaplandauRouter)
+
+    app.use('/changepassword', changepasswordRouter)
 
     app.use('/', profileKHRouter)
 

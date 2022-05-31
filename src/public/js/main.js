@@ -838,3 +838,22 @@ function uploadCMND(){
         let url = form.getAttribute("action") + "?username=" + username + '&_method=PATCH';
         form.setAttribute("action", url)
       }
+
+
+function changePassword(){
+  let msg = document.getElementById('msg')
+  msg.style.display = 'none'
+
+  document.querySelector('#change-pass').addEventListener('submit', (e) => {
+    let newpassword = document.getElementById('newpassword').value
+    let rePassword = document.getElementById('rePassword').value
+
+    if(newpassword != rePassword){
+      msg.style.display = 'flex'
+      msg.innerText = 'Mật khẩu xác nhận không trùng khớp'
+      e.preventDefault()
+      return false
+    }
+  })
+}
+
