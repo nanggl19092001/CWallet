@@ -62,7 +62,7 @@ class main {
         const SoTien = req.cookies.userInput.data.SoTien;
         const username = req.session.user;
 
-        let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, " + username + ", '0797377266', '" + SoTien + "', 1, 0, 1)"
+        let query1 = "INSERT INTO chuyentien (IDChuyenTien, username, SDTNguoiNhan, SoTien, TrangThai, BenChiuPhi, LoaiGiaoDich) VALUES(NULL, " + username + ", '0', '" + SoTien + "', 1, 0, 1)"
         DBconnection.query(query1, function (err, result) {
             if (err) throw err;
             // console.log(result);
