@@ -931,6 +931,10 @@ function uploadCMND(){
               if (state === 0) {
                 alert("OTP này không đúng!");
               }
+              else if (state === 2){
+                alert("OTP đã hết hạn!");
+                location.href = '/auth/restorePassword'
+              }
               else {
                 location.href = '/auth/changePassword?username='+data.username
               }

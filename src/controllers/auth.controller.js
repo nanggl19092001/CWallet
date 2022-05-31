@@ -33,15 +33,28 @@ class auth{
 
     async verifyOtp(req,res) {
       const {otp, id} = req.body;
-      DBconnection.query(`SELECT OTPKey, username FROM otp WHERE id = "${id}"`,async (err,result)=>{
-        var {OTPKey, username} = JSON.parse(JSON.stringify(result))[0];
-        if (Number(otp) !== OTPKey) {
-          res.json({state: 0})
+      DBconnection.query(`SELECT * FROM otp WHERE id = "${id}"`,async (err,result)=>{
+        if (Number(otp) !== result[0].OTPKey) {
+          return res.json({state: 0})
         }
-        else if (Number(otp) === OTPKey){
+        else if (Number(otp) === result[0].OTPKey){
           // console.log("Ádd")
-     
-          res.json({state: 1, username: username})
+          let date_ob = new Date();
+          // let minutes = date_ob.getMinutes();
+          let deacDate = new Date(result[0].TimeSt)
+
+          console.log(result[0].TimeSt)
+          const a = Math.floor((date_ob - deacDate)/1000/60)
+
+          console.log(a)
+          if(a <= 1){
+            DBconnection.query(`DELETE FROM otp WHERE username = ${result[0].username}`)
+            return res.json({state: 1, username: result[0].username})
+          }
+          else{
+            DBconnection.query(`DELETE FROM otp WHERE username = ${result[0].username}`)
+            return res.json({state: 2, username: result[0].username})
+          }
         }
       })
     }
