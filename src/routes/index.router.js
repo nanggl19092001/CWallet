@@ -12,11 +12,10 @@ const registerRouter = require('./register.router.js')
 const chuyenTienRouter = require('./chuyenTien.router.js')
 
 function routes(app) {
-    app.use('/profileKH',profileKHRouter)
-    app.use('/auth',authRouter)
+    
     app.use('/login', loginRouter)
     app.use('/register', registerRouter)
-    app.use('/chuyenTien', chuyenTienRouter)
+    app.use('/naptien', naptienRouter)
 
     app.use((req,res,next) => {
         if(!req.session.user){
@@ -31,9 +30,11 @@ function routes(app) {
         req.session.destroy()
         res.redirect('/')
     })
-
-    app.use('/naptien', naptienRouter)
-
+    
+    app.use('/profileKH',profileKHRouter)
+    app.use('/auth',authRouter)
+    app.use('/chuyenTien', chuyenTienRouter)
+    
     app.use('/ruttien', ruttienRouter)
     
     app.use('/admin', adminRouter)

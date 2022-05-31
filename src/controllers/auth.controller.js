@@ -20,7 +20,7 @@ class auth{
         else {
           DBconnection.query(`SELECT username FROM user WHERE Email = "${email}"`,async (err,result)=>{
             let username = JSON.parse(JSON.stringify(result))[0].username;
-            const otp = Math.floor(Math.random() * 9) + 100000;
+            const otp = Math.floor(Math.random() * (1000000 - 100000)) + 100000;
             DBconnection.query(`INSERT INTO otp( username, OTPKey) VALUES (${username},${otp})`, async(err, result) => {
              const id = JSON.parse(JSON.stringify(result)).insertId
               await main(email, otp)

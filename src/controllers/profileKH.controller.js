@@ -3,7 +3,8 @@ const DBconnection = require('../DB')
 class main{
 // INSERT INTO `user`(`SoDienThoai`, `Email`, `HoVaTen`, `NgayThangNamSinh`, `DiaChi`, `username`, `password`, `DangNhapLanDau`, `trangthai`, `DangNhapThatBai`, `ThoiGianVoHieuHoa`, `LoaiTaiKhoan`) VALUES ('0359663439','aaaa@gmail.com',N'Phạm Tùng','08/23/2001','phamtung123','123456',1,2,0,,Null,0)
     async profileKHPage(req,res){
-        const username = Number(req.params.username);
+        // const username = Number(req.params.username);
+        const username = Number(req.session.user);
         DBconnection.query(`SELECT * FROM user WHERE username = ${username}`, function (err, result) {
             if (err) throw err;
             const user = JSON.parse(JSON.stringify(result))
@@ -29,7 +30,7 @@ class main{
             
         }
         
-        DBconnection.query('UPDATE user SET trangthai = 0 WHERE username = ' + req.params.username, (err, result) => {
+        DBconnection.query('UPDATE user SET trangthai = 0 WHERE username = ' + req.session.user, (err, result) => {
             if (err) throw err;
             res.status(200).json({message: "Yêu cầu đã được gửi, chờ admin phê duyệt!"});
         })
